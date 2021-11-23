@@ -19,7 +19,7 @@ set -e
 #
 # Git commit from https://github.com/docker/docker-install when
 # the script was uploaded (Should only be modified by upload job):
-SCRIPT_COMMIT_SHA="0e685c6ac0bddd7b2ba7bcaaeb519746ad249a29"
+SCRIPT_COMMIT_SHA="93d2499759296ac1f9c510605fef85052a2c32be"
 
 CHANNEL="stable"
 DOWNLOAD_URL="https://download.docker.com"

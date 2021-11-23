@@ -1,8 +1,8 @@
---- 20.10.8.orig.sh	2021-11-23 18:00:18.480497175 +0530
-+++ 20.10.8.sh	2021-11-23 18:13:44.788829135 +0530
+--- 20.10.8.orig.sh	2021-11-23 18:56:04.465786058 +0530
++++ 20.10.8.sh	2021-11-23 18:56:48.462460506 +0530
 @@ -21,28 +21,34 @@
  # the script was uploaded (Should only be modified by upload job):
- SCRIPT_COMMIT_SHA="0e685c6ac0bddd7b2ba7bcaaeb519746ad249a29"
+ SCRIPT_COMMIT_SHA="93d2499759296ac1f9c510605fef85052a2c32be"
  
 -# strip "v" prefix if present
 -VERSION="${VERSION#v}"
