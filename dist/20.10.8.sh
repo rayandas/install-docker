@@ -19,7 +19,7 @@ set -e
 #
 # Git commit from https://github.com/docker/docker-install when
 # the script was uploaded (Should only be modified by upload job):
-SCRIPT_COMMIT_SHA="0e685c6ac0bddd7b2ba7bcaaeb519746ad249a29"
+SCRIPT_COMMIT_SHA="93d2499759296ac1f9c510605fef85052a2c32be"
 
 CHANNEL="stable"
 DOWNLOAD_URL="https://download.docker.com"
@@ -443,7 +443,28 @@ do_install() {
 						echo
 						echo "ERROR: '$VERSION' not found amongst apt-cache madison results"
 						echo
-						exit 1
+						echo "Trying to install a lower version of Docker."
+						current_version=$VERSION
+						while :
+						do
+							lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
+							echo "Installing Docker $lower_version ..."
+							$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
+							if [ "$(which docker)" ]; then
+								echo "Docker $lower_version installed successfully."
+								break
+							fi
+							current_version=$lower_version
+							if [ "$current_version" == "20.10.2" ]; then
+        						current_version="19.03.16"
+    						fi
+							if [ "$current_version" == "19.03.0" ]; then
+        						current_version="18.09.10"
+    						fi
+							if [ "$current_version" == "18.09.1" ]; then
+        						break
+    						fi
+						done
 					fi
 					if version_gte "18.09"; then
 							search_command="apt-cache madison 'docker-ce-cli' | grep '$pkg_pattern' | head -1 | awk '{\$1=\$1};1' | cut -d' ' -f 3"
@@ -549,7 +570,28 @@ do_install() {
 						echo
 						echo "ERROR: '$VERSION' not found amongst $pkg_manager list results"
 						echo
-						exit 1
+						echo "Trying to install a lower version of Docker."
+						current_version=$VERSION
+						while :
+						do
+							lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
+							echo "Installing Docker $lower_version ..."
+							$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
+							if [ "$(which docker)" ]; then
+								echo "Docker $lower_version installed successfully."
+								break
+							fi
+							current_version=$lower_version
+							if [ "$current_version" == "20.10.2" ]; then
+        						current_version="19.03.16"
+    						fi
+							if [ "$current_version" == "19.03.0" ]; then
+        						current_version="18.09.10"
+    						fi
+							if [ "$current_version" == "18.09.1" ]; then
+        						break
+    						fi
+						done
 					fi
 					if version_gte "18.09"; then
 						# older versions don't support a cli package
@@ -621,7 +663,28 @@ do_install() {
 						echo
 						echo "ERROR: '$VERSION' not found amongst zypper list results"
 						echo
-						exit 1
+						echo "Trying to install a lower version of Docker."
+						current_version=$VERSION
+						while :
+						do
+							lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
+							echo "Installing Docker $lower_version ..."
+							$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
+							if [ "$(which docker)" ]; then
+								echo "Docker $lower_version installed successfully."
+								break
+							fi
+							current_version=$lower_version
+							if [ "$current_version" == "20.10.2" ]; then
+        						current_version="19.03.16"
+    						fi
+							if [ "$current_version" == "19.03.0" ]; then
+        						current_version="18.09.10"
+    						fi
+							if [ "$current_version" == "18.09.1" ]; then
+        						break
+    						fi
+						done
 					fi
 					search_command="zypper search -s --match-exact 'docker-ce-cli' | grep '$pkg_pattern' | tail -1 | awk '{print \$6}'"
 					# It's okay for cli_pkg_version to be blank, since older versions don't support a cli package
