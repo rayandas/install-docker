@@ -365,7 +365,7 @@ do_install() {
 			esac
 		;;
 
-		centos|rhel|sles)
+		centos|rhel|sles|rocky)
 			if [ -z "$dist_version" ] && [ -r /etc/os-release ]; then
 				dist_version="$(. /etc/os-release && echo "$VERSION_ID")"
 			fi
@@ -450,9 +450,9 @@ do_install() {
 							lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
 							echo "Installing Docker $lower_version ..."
 							$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
-							if [ "$(which docker)" ]; then
+							if [ "$(docker version | grep Version)" ]; then
 								echo "Docker $lower_version installed successfully."
-								break
+								exit 0
 							fi
 							current_version=$lower_version
 							if [ "$current_version" == "20.10.2" ]; then
@@ -462,7 +462,8 @@ do_install() {
         						current_version="18.09.10"
     						fi
 							if [ "$current_version" == "18.09.1" ]; then
-        						break
+        						echo "You have to install the script manually if you want to install docker below 18.09.1"
+								exit 1
     						fi
 						done
 					fi
@@ -498,7 +499,7 @@ do_install() {
 			echo_docker_as_nonroot
 			exit 0
 			;;
-		centos|fedora|rhel|ol)
+		centos|fedora|rhel|ol|rocky)
 			if [ "$(uname -m)" != "s390x" ] && [ "$lsb_dist" = "rhel" ]; then
 				echo "Packages for RHEL are currently only available for s390x."
 				echo "Trying to install a lower version of Docker."
@@ -510,7 +511,7 @@ do_install() {
 					$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
 					if [ "$(docker version | grep Version)" ]; then
 						echo "Docker $lower_version installed successfully."
-						break
+						exit 0
 					fi
 					current_version=$lower_version
 					if [ "$current_version" == "20.10.2" ]; then
@@ -520,7 +521,8 @@ do_install() {
         				current_version="18.09.10"
     				fi
 					if [ "$current_version" == "18.09.1" ]; then
-        				break
+        				echo "You have to install the script manually if you want to install docker below 18.09.1"
+						exit 1
     				fi
 				done
 			fi
@@ -598,9 +600,9 @@ do_install() {
 							lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
 							echo "Installing Docker $lower_version ..."
 							$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
-							if [ "$(which docker)" ]; then
+							if [ "$(docker version | grep Version)" ]; then
 								echo "Docker $lower_version installed successfully."
-								break
+								exit 0
 							fi
 							current_version=$lower_version
 							if [ "$current_version" == "20.10.2" ]; then
@@ -610,7 +612,8 @@ do_install() {
         						current_version="18.09.10"
     						fi
 							if [ "$current_version" == "18.09.1" ]; then
-        						break
+        						echo "You have to install the script manually if you want to install docker below 18.09.1"
+								exit 1
     						fi
 						done
 					fi
@@ -651,7 +654,7 @@ do_install() {
 					$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
 					if [ "$(docker version | grep Version)" ]; then
 						echo "Docker $lower_version installed successfully."
-						break
+						exit 0
 					fi
 					current_version=$lower_version
 					if [ "$current_version" == "20.10.2" ]; then
@@ -661,7 +664,8 @@ do_install() {
         				current_version="18.09.10"
     				fi
 					if [ "$current_version" == "18.09.1" ]; then
-        				break
+        				echo "You have to install the script manually if you want to install docker below 18.09.1"
+						exit 1
     				fi
 				done
 			fi
@@ -712,9 +716,9 @@ do_install() {
 							lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
 							echo "Installing Docker $lower_version ..."
 							$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
-							if [ "$(which docker)" ]; then
+							if [ "$(docker version | grep Version)" ]; then
 								echo "Docker $lower_version installed successfully."
-								break
+								exit 0
 							fi
 							current_version=$lower_version
 							if [ "$current_version" == "20.10.2" ]; then
@@ -724,7 +728,8 @@ do_install() {
         						current_version="18.09.10"
     						fi
 							if [ "$current_version" == "18.09.1" ]; then
-        						break
+        						echo "You have to install the script manually if you want to install docker below 18.09.1"
+								exit 1
     						fi
 						done
 					fi
