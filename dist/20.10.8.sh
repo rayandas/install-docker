@@ -501,7 +501,28 @@ do_install() {
 		centos|fedora|rhel|ol)
 			if [ "$(uname -m)" != "s390x" ] && [ "$lsb_dist" = "rhel" ]; then
 				echo "Packages for RHEL are currently only available for s390x."
-				exit 1
+				echo "Trying to install a lower version of Docker."
+				current_version=$VERSION
+				while :
+				do
+					lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
+					echo "Installing Docker $lower_version ..."
+					$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
+					if [ "$(docker version | grep Version)" ]; then
+						echo "Docker $lower_version installed successfully."
+						break
+					fi
+					current_version=$lower_version
+					if [ "$current_version" == "20.10.2" ]; then
+        				current_version="19.03.16"
+    				fi
+					if [ "$current_version" == "19.03.0" ]; then
+        				current_version="18.09.10"
+    				fi
+					if [ "$current_version" == "18.09.1" ]; then
+        				break
+    				fi
+				done
 			fi
                         # installing centos packages
 			yum_repo="$DOWNLOAD_URL/linux/centos/$REPO_FILE"
@@ -621,7 +642,28 @@ do_install() {
 		sles)
 			if [ "$(uname -m)" != "s390x" ]; then
 				echo "Packages for SLES are currently only available for s390x"
-				exit 1
+				echo "Trying to install a lower version of Docker."
+				current_version=$VERSION
+				while :
+				do
+					lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
+					echo "Installing Docker $lower_version ..."
+					$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
+					if [ "$(docker version | grep Version)" ]; then
+						echo "Docker $lower_version installed successfully."
+						break
+					fi
+					current_version=$lower_version
+					if [ "$current_version" == "20.10.2" ]; then
+        				current_version="19.03.16"
+    				fi
+					if [ "$current_version" == "19.03.0" ]; then
+        				current_version="18.09.10"
+    				fi
+					if [ "$current_version" == "18.09.1" ]; then
+        				break
+    				fi
+				done
 			fi
 			sles_repo="$DOWNLOAD_URL/linux/$lsb_dist/$REPO_FILE"
 			opensuse_repo="https://download.opensuse.org/repositories/security:SELinux/SLE_15_SP2/security:SELinux.repo"
