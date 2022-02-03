@@ -24,8 +24,7 @@ SCRIPT_COMMIT_SHA="93d2499759296ac1f9c510605fef85052a2c32be"
 CHANNEL="stable"
 DOWNLOAD_URL="https://download.docker.com"
 REPO_FILE="docker-ce.repo"
-temp_version=$(find . -maxdepth 1 -name '20.10.*' | sort -V | tail -1)
-VERSION=$(echo $temp_version | sed 's/.sh//g' | sed 's/.\///g')
+VERSION=20.10.11
 DIND_TEST_WAIT=${DIND_TEST_WAIT:-3s}  # Wait time until docker start at dind test env
 
 # Issue https://github.com/rancher/rancher/issues/29246
