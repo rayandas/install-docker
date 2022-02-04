@@ -434,33 +434,30 @@ do_install() {
 					echo "# WARNING: VERSION pinning is not supported in DRY_RUN"
 				else
 					# Will work for incomplete versions IE (17.12), but may not actually grab the "latest" if in the test channel
-					pkg_pattern="$(echo "$VERSION" | sed "s/-ce-/~ce~.*/g" | sed "s/-/.*/g").*-0~$lsb_dist"
-					search_command="apt-cache madison 'docker-ce' | grep '$pkg_pattern' | head -1 | awk '{\$1=\$1};1' | cut -d' ' -f 3"
-					pkg_version="$($sh_c "$search_command")"
-					echo "INFO: Searching repository for VERSION '$VERSION'"
-					echo "INFO: $search_command"
-					if [ -z "$pkg_version" ]; then
-						echo
-						echo "ERROR: '$VERSION' not found amongst apt-cache madison results"
-						echo
-						echo "Trying to install a lower version of Docker."
-						current_version=$VERSION
-						while :
-						do
+					current_version=$VERSION
+					while :
+					do
+						pkg_pattern="$(echo "$current_version" | sed "s/-ce-/~ce~.*/g" | sed "s/-/.*/g").*-0~$lsb_dist"
+						search_command="apt-cache madison 'docker-ce' | grep '$pkg_pattern' | head -1 | awk '{\$1=\$1};1' | cut -d' ' -f 3"
+						pkg_version="$($sh_c "$search_command")"
+						echo "INFO: Searching repository for VERSION '$VERSION'"
+						echo "INFO: $search_command"
+						if [ -z "$pkg_version" ]; then
+							echo
+							echo "ERROR: '$VERSION' not found amongst apt-cache madison results"
+							echo
 							lower_version=$(echo $current_version | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
+							current_version=$lower_version
+						else
 							echo "Installing Docker $lower_version ..."
 							$sh_c "curl https://releases.rancher.com/install-docker/$lower_version.sh | sh"
-							if [ "$(docker version | grep Version)" ]; then
-								echo "Docker $lower_version installed successfully."
-								exit 0
-							fi
-							current_version=$lower_version
-							if [ "$current_version" == "20.10.2" ]; then
+							break
+						fi
+						if [ "$current_version" == "20.10.2" ]; then
         						echo "ERROR: Docker 20.10.1 is not supported by this installation script."
                                 exit 1
     						fi
-						done
-					fi
+					done
 					if version_gte "18.09"; then
 							search_command="apt-cache madison 'docker-ce-cli' | grep '$pkg_pattern' | head -1 | awk '{\$1=\$1};1' | cut -d' ' -f 3"
 							echo "INFO: $search_command"
