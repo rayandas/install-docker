@@ -44,7 +44,7 @@ install_latest_available_version() {
 		echo
 	else
 		echo "Installing Docker $1"
-		$sh_c "curl https://releases.rancher.com/install-docker/$1.sh | sh"
+		$sh_c "curl https://github.com/rayandas/install-docker/blob/fix-gpg-key-popup/dist/$1.sh | sh"
 		if [ "$(docker version | grep Version)" ]; then
 			echo "INFO: Docker $1 installed successfully."
 		fi
@@ -58,7 +58,7 @@ install_latest_available_version_for_non_s390x () {
 		exit 0
 	fi
 	echo "Installing Docker $1 ..."
-	$sh_c "curl https://releases.rancher.com/install-docker/$1.sh | sh"
+	$sh_c "curl https://github.com/rayandas/install-docker/blob/fix-gpg-key-popup/dist/$1.sh | sh"
 	if [ "$(docker version | grep Version)" ]; then
 		echo "Docker $1 installed successfully."
 		exit 0
