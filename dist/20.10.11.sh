@@ -369,6 +369,7 @@ do_install() {
 			if [ -z "$dist_version" ] && [ -r /etc/os-release ]; then
 				dist_version="$(. /etc/os-release && echo "$VERSION_ID")"
 			fi
+			
 		;;
 
 		oracleserver|ol)
@@ -481,6 +482,11 @@ do_install() {
 			if [ "$(uname -m)" != "s390x" ] && [ "$lsb_dist" = "rhel" ]; then
 				echo "Packages for RHEL are currently only available for s390x."
 				exit 1
+			fi
+			# set vault.centos.or repo
+			if [ "$lsb_dist" = "centos" ] && [ "$dist_version" -ge "8" ]; then
+				$sh_c "cd /etc/yum.repos.d/ && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*"
+				$sh_c "cd /etc/yum.repos.d/ && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*"
 			fi
                         # installing centos packages
 			yum_repo="$DOWNLOAD_URL/linux/centos/$REPO_FILE"
